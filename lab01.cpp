@@ -74,17 +74,17 @@ double melhorRota(int n, int m, vector<vector<int> > &pontes, vector<double> &pr
 	*/	
 	vector<vector<double> > prob(n, vector<double>(pow(2,k), 0));
 
-	priority_queue < vertice > Q;
-	Q.push(criar_vertice(0, 0, 1)); //adiciona o vértice source na fila de prioridade
+	priority_queue < vertice > encontrados;
+	encontrados.push(criar_vertice(0, 0, 1)); //adiciona o vértice source na fila de prioridade
 	/*
 	o caminho iniciado no vértice source (id = 0)
 	nao passou por nenhum ingrediente (coletado = 000000)
 	e tem probabilidade 1 de chegar em si mesmo
 	*/
 	prob[0][0] = 1; //tem probabilidade 1 de chegar em si mesmo sem pegar nenhum ingrediente
-	while (!Q.empty()){
-		vertice atual = Q.top();
-		Q.pop();
+	while (!encontrados.empty()){
+		vertice atual = encontrados.top();
+		encontrados.pop();
 		if (atual.prob < prob[atual.id][atual.coletados]){
 			continue;
 		}
@@ -100,7 +100,7 @@ double melhorRota(int n, int m, vector<vector<int> > &pontes, vector<double> &pr
 				coletados = coletados | (1 << (mapaIngredientes[adj[0]] - 1)); 
 				//deslocamos o bit 1 num_ingrediente vezes para a esquerda
 				/*
-				e entao fazemos um or com coletados para salvar q aquele ingrediente
+				e entao fazemos um or com coletados para salvar encontrados aquele ingrediente
 				foi coletado
 				*/ 
 			}
@@ -109,7 +109,7 @@ double melhorRota(int n, int m, vector<vector<int> > &pontes, vector<double> &pr
 
 			if (prob_atual > prob[adj[0]][coletados]){
 				prob[adj[0]][coletados] = prob_atual;
-				Q.push(criar_vertice(adj[0], coletados, prob_atual));
+				encontrados.push(criar_vertice(adj[0], coletados, prob_atual));
 			}
 		}
 	}
